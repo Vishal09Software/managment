@@ -198,8 +198,8 @@
                                                     <tr>
                                                         <th scope="row">{{ $key + 1 }}</th>
                                                         <td>{{ $sale->date }}</td>
-                                                        <td>{{ json_decode($sale->vendor_details)->name }}</td>
-                                                        <td>{{ json_decode($sale->customer_details)->name }}</td>
+                                                        <td>{{ $sale->vendor_name }}</td>
+                                                        <td>{{ $sale->customer_name }}</td>
                                                         <td>₹{{ number_format($sale->s_total, 2) }}</td>
                                                         <td>
                                                             <a href="{{ route('sales.show', $sale->id) }}"
