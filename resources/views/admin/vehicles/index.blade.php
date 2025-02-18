@@ -30,8 +30,8 @@
                             <form action="{{ route('vehicles.index') }}" method="GET" class="row mb-3 justify-content-center">
                                 <div class="col-md-3">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control shadow-sm" name="fields[vehicle_number]" id="vehicleNumberField" placeholder="Search by Vehicle Number" value="{{ request()->input('fields.vehicle_number') }}">
-                                        <label for="vehicleNumberField">Search by Vehicle Number</label>
+                                        <input type="text" class="form-control shadow-sm" name="fields[owner_name]" id="ownerNameField" placeholder="Search by Owner Name" value="{{ request()->input('fields.owner_name') }}">
+                                        <label for="ownerNameField">Search by Owner Name</label>
                                     </div>
                                 </div>
 
@@ -67,7 +67,6 @@
                                     <thead>
                                         <tr>
                                             <th><b>No</b></th>
-                                            <th><b>Vehicle Name</b></th>
                                             <th><b>Vehicle Number</b></th>
                                             <th><b>Owner Name</b></th>
                                             <th><b>Driver Name</b></th>
@@ -79,7 +78,6 @@
                                             <tr>
                                                 <td>{{ ($vehicles->currentPage() - 1) * $vehicles->perPage() + $loop->iteration }}</td>
                                                 <td>{{ $vehicle->vehicle_name }}</td>
-                                                <td>{{ $vehicle->vehicle_number }}</td>
                                                 <td>{{ $vehicle->owner_name }}</td>
                                                 <td>{{ $vehicle->driver_name }}</td>
                                                 <td>

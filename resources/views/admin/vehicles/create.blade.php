@@ -37,14 +37,14 @@
                                     <input type="text" class="form-control @error('vehicle_name') is-invalid @enderror"
                                         id="vehicle_name" name="vehicle_name" placeholder="Vehicle Name"
                                         value="{{ old('vehicle_name') }}" required>
-                                    <label for="vehicle_name">Vehicle Name <span class="text-danger">*</span></label>
+                                    <label for="vehicle_name">Vehicle No <span class="text-danger">*</span></label>
                                     @error('vehicle_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="text" class="form-control @error('vehicle_no') is-invalid @enderror"
                                         id="vehicle_no" name="vehicle_no" placeholder="Vehicle Number"
@@ -54,7 +54,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="col-md-4">
                                 <div class="form-floating">
@@ -80,7 +80,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="text" class="form-control @error('owner_address') is-invalid @enderror"
                                         id="owner_address" name="owner_address" placeholder="Owner Address"
@@ -92,7 +92,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="text" class="form-control @error('driver_name') is-invalid @enderror"
                                         id="driver_name" name="driver_name" placeholder="Driver Name"
@@ -104,7 +104,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="tel" class="form-control @error('driver_phone') is-invalid @enderror"
                                         id="driver_phone" name="driver_phone" placeholder="Driver Phone"

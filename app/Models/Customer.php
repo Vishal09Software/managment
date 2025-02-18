@@ -17,7 +17,12 @@ class Customer extends Model
         'dob',
         'image',
         'gst_number',
-        'status'
+        'gst_code',
+        'status',
+        'city',
+        'state',
+        'country',
+        'zipcode'
     ];
 
     use SoftDeletes;

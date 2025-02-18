@@ -39,9 +39,9 @@ class VehicleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'vehicle_name' => 'required|string|max:255',
+            'vehicle_name' => 'required|string|max:255|unique:vehicles,vehicle_name',
             'owner_name' => 'required|string|max:255',
-            'vehicle_no' => 'required|string|max:255|unique:vehicles,vehicle_number',
+            'vehicle_no' => 'nullable',
             'owner_phone' => 'required|string|max:255',
             'owner_address' => 'required|string|max:255',
             'driver_name' => 'required|string|max:255',
@@ -69,8 +69,8 @@ class VehicleController extends Controller
     public function update(Request $request, Vehicle $vehicle)
     {
         $request->validate([
-            'vehicle_name' => 'required|string|max:255',
-            'vehicle_number' => 'required|string|max:255|unique:vehicles,vehicle_number,'.$vehicle->id,
+            'vehicle_name' => 'required|string|max:255|unique:vehicles,vehicle_name',
+            'vehicle_number' => 'nullable',
             'owner_name' => 'required|string|max:255',
             'owner_phone' => 'required|string|max:255',
             'owner_address' => 'required|string|max:255',

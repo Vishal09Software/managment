@@ -12,42 +12,42 @@
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('users.*') ? '' : 'collapsed' }}" href="{{ route('users.index') }}">
                 <i class="bi bi-people"></i>
-                <span>User Management</span>
+                <span>Users</span>
             </a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('customers.*') ? '' : 'collapsed' }}" href="{{ route('customers.index') }}">
                 <i class="bi bi-person-lines-fill"></i>
-                <span>Customer Management</span>
+                <span>Customers</span>
             </a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('vendors.*') ? '' : 'collapsed' }}" href="{{ route('vendors.index') }}">
                 <i class="bi bi-shop"></i>
-                <span>Vendor Management</span>
+                <span>Vendors</span>
             </a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('products.*') ? '' : 'collapsed' }}" href="{{ route('products.index') }}">
                 <i class="bi bi-box"></i>
-                <span>Product Management</span>
+                <span>Products</span>
             </a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('vehicles.*') ? '' : 'collapsed' }}" href="{{ route('vehicles.index') }}">
                 <i class="bi bi-truck"></i>
-                <span>Vehicle Management</span>
+                <span>Vehicles</span>
             </a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('sales.*') ? '' : 'collapsed' }}" href="{{ route('sales.index') }}">
                 <i class="bi bi-cart"></i>
-                <span>Sales Management</span>
+                <span>Sales</span>
             </a>
         </li>
 

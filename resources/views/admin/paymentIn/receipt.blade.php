@@ -126,15 +126,15 @@
                 @endphp
                 <tr>
                     <td>Total Amount</td>
-                    <td class="text-end">{{ number_format($totalSales, 2) }}</td>
+                    <td class="text-end">{{ number_format($totalSales, 2) }} Rs.</td>
                 </tr>
                 <tr>
                     <td>Payment Amount</td>
-                    <td class="text-end">{{ number_format($payment->amount, 2) }}</td>
+                    <td class="text-end">{{ number_format($payment->amount, 2) }} Rs.</td>
                 </tr>
                 <tr>
                     <td>Remaining Balance</td>
-                    <td class="text-end">{{ number_format($remainingAmount, 2) }}</td>
+                    <td class="text-end">{{ number_format($remainingAmount, 2) }} Rs.</td>
                 </tr>
             </tbody>
         </table>

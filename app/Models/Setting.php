@@ -17,5 +17,6 @@ class Setting extends Model
         'account_no',
         'ifsc_code',
         'account_holder_name',
+        'gst_code',
     ];
 }

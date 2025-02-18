@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('ifsc_code');
             $table->string('account_holder_name');
             $table->string('business_logo');
+            $table->string('gst_code');
             $table->timestamps();
         });
     }

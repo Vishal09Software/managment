@@ -23,6 +23,7 @@ class Vendor extends Model
         'image',
         'status',
         'gst_number',
+        'gst_code',
     ];
 
 }

@@ -15,9 +15,31 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\View;
 class SalesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $sales = Sale::orderBy('created_at', 'desc')->paginate(10);
+        $query = Sale::query();
+
+        if ($request->has('fields')) {
+            $fields = $request->input('fields');
+
+            if (!empty($fields['vendor_name'])) {
+                $query->where('vendor_name', 'like', '%' . $fields['vendor_name'] . '%');
+            }
+
+            if (!empty($fields['customer_name'])) {
+                $query->where('customer_name', 'like', '%' . $fields['customer_name'] . '%');
+            }
+
+            if (!empty($fields['driver_name'])) {
+                $query->where('driver_name', 'like', '%' . $fields['driver_name'] . '%');
+            }
+
+            if (!empty($fields['eway_bill_number'])) {
+                $query->where('eway_bill_number', 'like', '%' . $fields['eway_bill_number'] . '%');
+            }
+        }
+
+        $sales = $query->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.sales.index', compact('sales'));
     }
 
@@ -81,7 +103,7 @@ class SalesController extends Controller
         $validated['vehicle_id'] = $vehicle->id;
         $validated['driver_name'] = $vehicle->driver_name;
         $validated['driver_phone'] = $vehicle->driver_phone;
-        $validated['vehicle_number'] = $vehicle->vehicle_number;
+        $validated['vehicle_number'] = $vehicle->vehicle_name;
 
         // Get tax details
         $tax = Tax::find($request->tax_id);
@@ -158,7 +180,7 @@ class SalesController extends Controller
         $validated['vehicle_id'] = $vehicle->id;
         $validated['driver_name'] = $vehicle->driver_name;
         $validated['driver_phone'] = $vehicle->driver_phone;
-        $validated['vehicle_number'] = $vehicle->vehicle_number;
+        $validated['vehicle_number'] = $vehicle->vehicle_name;
 
         // Get tax details
         $tax = Tax::find($request->tax_id);

@@ -63,13 +63,30 @@
                 </div>
 
                 <div class="col-md-4">
-                  <div class="form-floating">
-                    <input type="text" class="form-control @error('gst_number') is-invalid @enderror" id="gst_number" name="gst_number" placeholder="GST Number" value="{{ old('gst_number', $vendor->gst_number) }}" required>
-                    <label for="gst_number">GST Number</label>
-                    @error('gst_number')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                  </div>
+                    <div class="form-floating input-group">
+                        <select class="form-select @error('gst_code') is-invalid @enderror" id="gst_code"
+                            name="gst_code" style="max-width: 200px;">
+                            <option value="">Select GST Code</option>
+                            @foreach ($gsts as $gst)
+                                <option value="{{ $gst->gst_code }}"
+                                    {{ old('gst_code', $vendor->gst_code) == $gst->gst_code ? 'selected' : '' }}>
+                                    {{ $gst->name }} ({{ $gst->gst_code }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="form-floating">
+                            <input type="text" class="form-control @error('gst_number') is-invalid @enderror"
+                                id="gst_number" name="gst_number" placeholder="GST Number"
+                                value="{{ old('gst_number', $vendor->gst_number) }}">
+                            <label for="gst_number">GST Number</label>
+                        </div>
+                        @error('gst_code')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        @error('gst_number')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -96,6 +113,16 @@
                     @enderror
                   </div>
                 </div>
+
+                <div class="col-md-4">
+                    <div class="form-floating">
+                      <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" placeholder="Address" value="{{ old('address', $vendor->address) }}">
+                      <label for="address">Address</label>
+                      @error('address')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                    </div>
+                  </div>
 
                 <div class="col-md-4">
                   <div class="form-floating">
@@ -137,7 +164,8 @@
                   </div>
                 </div>
 
-                <div class="col-md-6">
+
+                <div class="col-md-4">
                   <div class="form-floating">
                     <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image">
                     <label for="image">Profile Image</label>
@@ -152,15 +180,7 @@
                   @endif
                 </div>
 
-                <div class="col-md-12">
-                    <div class="form-floating">
-                      <textarea class="form-control @error('address') is-invalid @enderror" id="address" name="address" placeholder="Address" required>{{ old('address', $vendor->address) }}</textarea>
-                      <label for="address">Address</label>
-                      @error('address')
-                          <div class="invalid-feedback">{{ $message }}</div>
-                      @enderror
-                    </div>
-                </div>
+
 
                 <div class="col-md-12">
                   <div class="form-check form-switch">

@@ -40,7 +40,7 @@
                             <!-- Custom Search Filters -->
                             <form action="{{ route('transactions-out.index') }}" method="GET"
                                 class="row mb-3 justify-content-center">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-floating">
                                         <input type="date" class="form-control shadow-sm" name="date_from"
                                             id="startDateField" placeholder="Start Date" value="{{ request('date_from') }}">
@@ -48,7 +48,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-floating">
                                         <input type="date" class="form-control shadow-sm" name="date_to"
                                             id="endDateField" placeholder="End Date" value="{{ request('date_to') }}">
@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-floating">
                                         <select class="form-select shadow-sm" name="type" id="typeField"
                                             onchange="showSecondSelect()">
@@ -70,7 +70,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3" id="vendorSelect" style="display:none;">
+                                <div class="col-md-2" id="vendorSelect" style="display:none;">
                                     <div class="form-floating">
                                         <select class="form-select select2 shadow-sm" name="vendor_id" id="vendorId">
                                             <option value="">Select Vendor</option>
@@ -84,7 +84,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3" id="vehicleSelect" style="display:none;">
+                                <div class="col-md-2" id="vehicleSelect" style="display:none;">
                                     <div class="form-floating">
                                         <select class="form-select select2 shadow-sm" name="vehicle_id" id="vehicleId">
                                             <option value="">Select Vehicle</option>
@@ -98,7 +98,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-floating">
                                         <select class="form-select shadow-sm" name="payment_method" id="methodField">
                                             <option value="">Select Method</option>
@@ -114,7 +114,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3 text-center">
+                                <div class="col-md-2 text-center mt-2">
                                     <button type="submit" class="btn btn-outline-primary shadow-sm me-2" title="Search">
                                         <i class="bi bi-search"></i>
                                     </button>

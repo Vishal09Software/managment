@@ -26,7 +26,54 @@
                                 </div>
                             </div>
 
+                            <form action="{{ route('sales.index') }}" method="GET"
+                                class="row mb-3 justify-content-center">
+                                <div class="col-md-2">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control shadow-sm" name="fields[vendor_name]"
+                                            id="vendorField" placeholder="Search  Vendor"
+                                            value="{{ request()->input('fields.vendor_name') }}">
+                                        <label for="vendorField">Search  Vendor</label>
+                                    </div>
+                                </div>
 
+                                <div class="col-md-2">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control shadow-sm" name="fields[customer_name]"
+                                            id="customerField" placeholder="Search  Customer"
+                                            value="{{ request()->input('fields.customer_name') }}">
+                                        <label for="customerField">Search  Customer</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control shadow-sm" name="fields[driver_name]"
+                                            id="vehicleField" placeholder="Search  Vehicle"
+                                            value="{{ request()->input('fields.driver_name') }}">
+                                        <label for="vehicleField">Search  Vehicle</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control shadow-sm" name="fields[eway_bill_number]"
+                                            id="ewayBillField" placeholder="Search  E-way Bill"
+                                            value="{{ request()->input('fields.eway_bill_number') }}">
+                                        <label for="ewayBillField">Search  E-way Bill</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 text-center mt-3">
+                                    <button type="submit" class="btn btn-outline-primary shadow-sm me-2" title="Search">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                    <a href="{{ route('sales.index') }}" class="btn btn-outline-secondary shadow-sm"
+                                        title="Reset">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                    </a>
+                                </div>
+                            </form>
 
                             <!-- Table with stripped rows -->
                             @if ($sales->isEmpty())
@@ -36,10 +83,11 @@
                                     <thead>
                                         <tr>
                                             <th><b>No</b></th>
-                                            <th><b>E-way Bill Number</b></th>
+                                            <th><b>E-way Bill</b></th>
                                             <th><b>Sale Date</b></th>
                                             <th><b>Vendor Name</b></th>
                                             <th><b>Customer Name</b></th>
+                                            <th><b>Driver Name</b></th>
                                             <th><b>Total Amount</b></th>
                                             <th><b>Actions</b></th>
                                         </tr>
@@ -52,6 +100,7 @@
                                                 <td>{{ $sale->date }}</td>
                                                 <td>{{ $sale->vendor_name }}</td>
                                                 <td>{{ $sale->customer_name }}</td>
+                                                <td>{{ $sale->driver_name ?? 'N/A' }}</td>
                                                 <td>₹{{ number_format($sale->s_total, 2) }}</td>
 
                                                 <td>

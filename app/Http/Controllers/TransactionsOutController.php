@@ -161,6 +161,16 @@ class TransactionsOutController extends Controller
             $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
             $sheet = $excel->getActiveSheet();
 
+            // Add title row with date range
+            $dateFrom = request('date_from') ?? 'Start';
+            $dateTo = request('date_to') ?? 'End';
+            $sheet->setCellValue('A1', "Payment Out Report ($dateFrom to $dateTo)");
+            $sheet->mergeCells('A1:F1');
+
+            // Style the title
+            $sheet->getStyle('A1')->getFont()->setBold(true);
+            $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
             // Set headers style
             $headerStyle = [
                 'font' => ['bold' => true],
@@ -170,18 +180,18 @@ class TransactionsOutController extends Controller
                 ]
             ];
 
-            // Add headers
+            // Add headers in row 2
             $headers = array_keys($payments->first());
             $col = 'A';
             foreach ($headers as $header) {
-                $sheet->setCellValue($col . '1', $header);
-                $sheet->getStyle($col . '1')->applyFromArray($headerStyle);
+                $sheet->setCellValue($col . '2', $header);
+                $sheet->getStyle($col . '2')->applyFromArray($headerStyle);
                 $sheet->getColumnDimension($col)->setAutoSize(true);
                 $col++;
             }
 
-            // Add data
-            $row = 2;
+            // Add data starting from row 3
+            $row = 3;
             foreach ($payments as $payment) {
                 $col = 'A';
                 foreach ($payment as $value) {

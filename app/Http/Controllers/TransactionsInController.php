@@ -126,13 +126,27 @@ class TransactionsInController extends Controller
             $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
             $sheet = $excel->getActiveSheet();
 
+            // Add title row with date range
+            $dateFrom = request('date_from') ?? 'Start';
+            $dateTo = request('date_to') ?? 'End';
+            $sheet->setCellValue('A1', "Payment In Report ($dateFrom to $dateTo)");
+            $sheet->mergeCells('A1:E1');
+
+            // Style the title
+            $sheet->getStyle('A1')->getFont()->setBold(true);
+            $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+            // Add headers in row 2
             $headers = array_keys($payments[0]);
             $col = 'A';
             foreach ($headers as $header) {
-                $sheet->setCellValue($col++ . '1', $header);
+                $sheet->setCellValue($col . '2', $header);
+                $sheet->getStyle($col . '2')->getFont()->setBold(true);
+                $col++;
             }
 
-            $row = 2;
+            // Add data starting from row 3
+            $row = 3;
             foreach ($payments as $payment) {
                 $col = 'A';
                 foreach ($payment as $value) {
@@ -140,6 +154,11 @@ class TransactionsInController extends Controller
                 }
                 $row++;
             }
+
+            // Add autofilter
+            $lastCol = 'E';
+            $lastRow = $row - 1;
+            $sheet->setAutoFilter("A2:{$lastCol}2");
 
             $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
             $writer->save('php://output');

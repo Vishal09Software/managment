@@ -18,10 +18,15 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('mobile');
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
+            $table->string('zipcode')->nullable();
             $table->string('address');
             $table->string('gender');
             $table->date('dob');
             $table->string('gst_number')->nullable();
+            $table->string('gst_code')->nullable();
             $table->string('image')->nullable();
             $table->boolean('status')->default(true);
             $table->softDeletes();

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Customer;
-
+use App\Models\GST;
 class CustomerController extends Controller
 {
     public function index(Request $request)
@@ -29,7 +29,8 @@ class CustomerController extends Controller
 
     public function create()
     {
-        return view('admin.customer.create');
+        $gsts = GST::all();
+        return view('admin.customer.create', compact('gsts'));
     }
 
     public function store(Request $request)
@@ -42,6 +43,11 @@ class CustomerController extends Controller
             'gender' => 'required',
             'dob' => 'required|date',
             'gst_number' => 'nullable',
+            'gst_code' => 'nullable',
+            'city' => 'nullable',
+            'state' => 'nullable',
+            'country' => 'nullable',
+            'zipcode' => 'nullable',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -53,6 +59,11 @@ class CustomerController extends Controller
             'gender' => $request->gender,
             'dob' => $request->dob,
             'gst_number' => $request->gst_number,
+            'gst_code' => $request->gst_code,
+            'city' => $request->city,
+            'state' => $request->state,
+            'country' => $request->country,
+            'zipcode' => $request->zipcode,
             'status' => $request->status ? 1 : 0
         ];
 
@@ -77,7 +88,8 @@ class CustomerController extends Controller
     public function edit($id)
     {
         $customer = Customer::findOrFail($id);
-        return view('admin.customer.edit', compact('customer'));
+        $gsts = GST::all();
+        return view('admin.customer.edit', compact('customer', 'gsts'));
     }
 
     public function update(Request $request, $id)
@@ -90,6 +102,11 @@ class CustomerController extends Controller
             'gender' => 'required',
             'dob' => 'required|date',
             'gst_number' => 'nullable',
+            'gst_code' => 'nullable',
+            'city' => 'nullable',
+            'state' => 'nullable',
+            'country' => 'nullable',
+            'zipcode' => 'nullable',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -103,6 +120,11 @@ class CustomerController extends Controller
             'gender' => $request->gender,
             'dob' => $request->dob,
             'gst_number' => $request->gst_number,
+            'gst_code' => $request->gst_code,
+            'city' => $request->city,
+            'state' => $request->state,
+            'country' => $request->country,
+            'zipcode' => $request->zipcode,
             'status' => $request->status ? 1 : 0
         ];
 

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Setting;
+use App\Models\GST;
 class SettingController extends Controller
 {
     public function index()
     {
         $settings = Setting::first();
-        return view('admin.setting.general', compact('settings'));
+        $gsts = GST::all();
+        return view('admin.setting.general', compact('settings', 'gsts'));
     }
 
     public function update(Request $request)
@@ -26,6 +28,7 @@ class SettingController extends Controller
             'account_no' => 'required',
             'ifsc_code' => 'required',
             'account_holder_name' => 'required',
+            'gst_code' => 'required',
         ]);
 
         $setting = Setting::first();
@@ -36,6 +39,7 @@ class SettingController extends Controller
         $setting->business_phone = $request->business_phone;
         $setting->business_email = $request->business_email;
         $setting->business_address = $request->business_address;
+        $setting->gst_code = $request->gst_code;
         $setting->gst_number = $request->gst_number;
         $setting->bank_name = $request->bank_name;
         $setting->account_no = $request->account_no;

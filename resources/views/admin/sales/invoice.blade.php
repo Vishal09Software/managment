@@ -208,13 +208,13 @@
                     <td>{{ $sale->product->hsn_code ?? '' }}</td>
                     <td>{{ $sale->k_weight ?? '' }}</td>
                     <td>Ton</td>
-                    <td> {{ number_format($sale->s_price ?? 0, 0) }}</td>
+                    <td> {{ number_format($sale->s_price ?? 0, 0) }} Rs.</td>
                     <td>{{ $sale->tax_rate ?? 0 }}%</td>
-                    <td> {{ number_format($sale->s_total ?? 0, 0) }}</td>
+                    <td> {{ number_format($sale->s_total ?? 0, 0) }} Rs.</td>
                 </tr>
                 <tr class="total-row">
                     <td colspan="7">Total</td>
-                    <td> {{ number_format($sale->s_total, 0) }}</td>
+                    <td> {{ number_format($sale->s_total, 0) }} Rs.</td>
                 </tr>
             </tbody>
         </table>
@@ -238,27 +238,27 @@
                 <table>
                     <tr>
                         <td>Sub Total:</td>
-                        <td style="text-align: right;"> {{ number_format($sale->k_weight * $sale->s_price, 0) }}</td>
+                        <td style="text-align: right;"> {{ number_format($sale->k_weight * $sale->s_price, 0) }}Rs.</td>
                     </tr>
                     <tr>
                         <td>SGST @ {{ number_format($sale->tax_rate/2, 1) }}%:</td>
-                        <td style="text-align: right;"> {{ number_format($halfTaxAmount, 0) }}</td>
+                        <td style="text-align: right;"> {{ number_format($halfTaxAmount, 0) }} Rs.</td>
                     </tr>
                     <tr>
                         <td>CGST @ {{ number_format($sale->tax_rate/2, 1) }}%:</td>
-                        <td style="text-align: right;"> {{ number_format($halfTaxAmount, 0) }}</td>
+                        <td style="text-align: right;"> {{ number_format($halfTaxAmount, 0) }} Rs.</td>
                     </tr>
                     <tr class="total-row">
                         <td><strong>Total:</strong></td>
-                        <td style="text-align: right;"><strong> {{ number_format($totalAmount, 0) }}</strong></td>
+                        <td style="text-align: right;"><strong> {{ number_format($totalAmount, 0) }} Rs.</strong></td>
                     </tr>
                     <tr>
                         <td>Received:</td>
-                        <td style="text-align: right;"> {{ number_format($payment->amount ?? 0, 0) }}</td>
+                        <td style="text-align: right;"> {{ number_format($payment->amount ?? 0, 0) }} Rs.</td>
                     </tr>
                     <tr>
                         <td>Balance:</td>
-                        <td style="text-align: right;"> {{ number_format($totalAmount - ($payment->amount ?? 0), 0) }}</td>
+                        <td style="text-align: right;"> {{ number_format($totalAmount - ($payment->amount ?? 0), 0) }} Rs.</td>
                     </tr>
                 </table>
             </div>

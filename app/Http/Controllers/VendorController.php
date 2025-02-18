@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Vendor;
-
+use App\Models\GST;
 class VendorController extends Controller
 {
     public function index(Request $request)
@@ -29,7 +29,8 @@ class VendorController extends Controller
 
     public function create()
     {
-        return view('admin.vendor.create');
+        $gsts = GST::all();
+        return view('admin.vendor.create', compact('gsts'));
     }
 
     public function store(Request $request)
@@ -40,6 +41,7 @@ class VendorController extends Controller
             'mobile' => 'required',
             'gst_number' => 'required',
             'address' => 'required',
+            'gst_code' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -55,7 +57,8 @@ class VendorController extends Controller
             'state' => $request->state,
             'country' => $request->country,
             'zip_code' => $request->zip_code,
-            'status' => $request->status ? 1 : 0
+            'status' => $request->status ? 1 : 0,
+            'gst_code' => $request->gst_code,
         ];
 
         if ($request->hasFile('image')) {
@@ -78,8 +81,9 @@ class VendorController extends Controller
 
     public function edit($id)
     {
+        $gsts = GST::all();
         $vendor = Vendor::findOrFail($id);
-        return view('admin.vendor.edit', compact('vendor'));
+        return view('admin.vendor.edit', compact('vendor', 'gsts'));
     }
 
     public function update(Request $request, $id)
@@ -89,6 +93,7 @@ class VendorController extends Controller
             'email' => 'required|email|unique:vendors,email,'.$id,
             'mobile' => 'required',
             'gst_number' => 'required',
+            'gst_code' => 'required',
             'address' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -108,6 +113,7 @@ class VendorController extends Controller
             'state' => $request->state,
             'country' => $request->country,
             'zip_code' => $request->zip_code,
+            'gst_code' => $request->gst_code,
         ];
 
         if ($request->hasFile('image')) {

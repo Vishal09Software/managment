@@ -73,7 +73,7 @@
                                             <option value="">Select Vehicle</option>
                                             @foreach($vehicles as $vehicle)
                                                 <option value="{{ $vehicle->id }}">
-                                                    {{ $vehicle->driver_name ? $vehicle->driver_name . ' (' . $vehicle->vehicle_number . ')' : $vehicle->owner_name . ' (' . $vehicle->vehicle_number . ')' }}
+                                                    {{ $vehicle->driver_name ? $vehicle->driver_name . ' (' . $vehicle->vehicle_number . ')' : $vehicle->owner_name . ' (' . $vehicle->vehicle_name . ')' }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -354,8 +354,8 @@
                                 return {
                                     id: vehicle.id,
                                     text: vehicle.driver_name ?
-                                        vehicle.driver_name + ' (' + vehicle.vehicle_number + ')' :
-                                        vehicle.owner_name + ' (' + vehicle.vehicle_number + ')'
+                                        vehicle.driver_name + ' (' + vehicle.vehicle_name + ')' :
+                                        vehicle.owner_name + ' (' + vehicle.vehicle_name + ')'
                                 };
                             })
                         };

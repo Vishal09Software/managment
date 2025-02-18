@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('mobile');
             $table->string('gender');
+            $table->string('gst_code');
             $table->string('gst_number');
             $table->date('dob');
             $table->string('address');

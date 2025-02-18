@@ -59,7 +59,6 @@ class DashboardController extends Controller
         for($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i)->format('Y-m-d');
             $dates[] = $date;
-
             $sales[] = $salesData->where('date', $date)->first()->count ?? 0;
             $revenue[] = $revenueData->where('date', $date)->first()->total ?? 0;
             $customers[] = $customerData->where('date', $date)->first()->count ?? 0;
@@ -71,6 +70,11 @@ class DashboardController extends Controller
             'revenue' => $revenue,
             'customers' => $customers
         ]);
+    }
+
+    public function showBlocks()
+    {
+        return view('welcome');
     }
 
 }
