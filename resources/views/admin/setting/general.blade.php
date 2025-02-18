@@ -76,6 +76,22 @@
                     @enderror
                   </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="business_logo" class="form-label">Business Logo</label>
+                      <input type="file" class="form-control @error('business_logo') is-invalid @enderror" id="business_logo" name="business_logo">
+                      @if($settings->business_logo)
+                        <img src="{{ asset('images/settings/' . $settings->business_logo) }}" alt="Current Logo" class="mt-2" style="max-width: 200px;">
+                      @endif
+                      @error('business_logo')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                    </div>
+                  </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">Bank Details</h5>
+                  </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
@@ -117,18 +133,7 @@
                   </div>
                 </div>
 
-                <div class="col-md-6">
-                  <div class="mb-3">
-                    <label for="business_logo" class="form-label">Business Logo</label>
-                    <input type="file" class="form-control @error('business_logo') is-invalid @enderror" id="business_logo" name="business_logo">
-                    @if($settings->business_logo)
-                      <img src="{{ asset('images/settings/' . $settings->business_logo) }}" alt="Current Logo" class="mt-2" style="max-width: 200px;">
-                    @endif
-                    @error('business_logo')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                  </div>
-                </div>
+
 
                 <div>
                   <button type="submit" class="btn btn-outline-primary">Save Changes</button>
