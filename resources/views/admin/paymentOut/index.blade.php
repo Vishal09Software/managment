@@ -21,14 +21,24 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <h5 class="card-title">Payments List</h5>
                                 <div>
-                                    <a href="{{ route('transactions.payment-out.create') }}"
+                                    <a href="{{ route('transactions-out.export', [
+                                        'date_from' => request('date_from'),
+                                        'date_to' => request('date_to'),
+                                        'type' => request('type'),
+                                        'vendor_id' => request('vendor_id'),
+                                        'vehicle_id' => request('vehicle_id'),
+                                        'payment_method' => request('payment_method')
+                                    ]) }}" class="btn btn-outline-success me-2">
+                                        <i class="bi bi-file-earmark-excel me-1"></i> Export
+                                    </a>
+                                    <a href="{{ route('transactions-out.create') }}"
                                         class="btn btn-outline-primary"><i class="bi bi-plus-circle me-1"></i> Create
                                         Payment</a>
                                 </div>
                             </div>
 
                             <!-- Custom Search Filters -->
-                            <form action="{{ route('transactions.payment-out.index') }}" method="GET"
+                            <form action="{{ route('transactions-out.index') }}" method="GET"
                                 class="row mb-3 justify-content-center">
                                 <div class="col-md-3">
                                     <div class="form-floating">
@@ -108,8 +118,8 @@
                                     <button type="submit" class="btn btn-outline-primary shadow-sm me-2" title="Search">
                                         <i class="bi bi-search"></i>
                                     </button>
-                                    <a href="{{ route('transactions.payment-out.index') }}"
-                                        class="btn btn-outline-secondary shadow-sm" title="Reset">
+                                    <a href="{{ route('transactions-out.index') }}" class="btn btn-outline-secondary shadow-sm"
+                                        title="Reset">
                                         <i class="bi bi-arrow-clockwise"></i>
                                     </a>
                                 </div>
@@ -141,7 +151,7 @@
                                             <td>{{ ucwords(str_replace('_', ' ', $payment->payment_method)) }}</td>
                                             <td>{{ $payment->payment_date }}</td>
                                             <td>
-                                                <a href="{{ route('transactions.payment-out.edit', $payment->id) }}"
+                                                <a href="{{ route('transactions-out.edit', $payment->id) }}"
                                                     class="btn btn-sm btn-outline-primary">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
@@ -167,7 +177,7 @@
                                                                 <button type="button" class="btn btn-outline-secondary"
                                                                     data-bs-dismiss="modal">Cancel</button>
                                                                 <form
-                                                                    action="{{ route('transactions.payment-out.destroy', $payment->id) }}"
+                                                                    action="{{ route('transactions-out.destroy', $payment->id) }}"
                                                                     method="POST" class="d-inline">
                                                                     @csrf
                                                                     @method('DELETE')

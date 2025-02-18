@@ -9,7 +9,7 @@
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('transactions.payment-in.index') }}">Payments</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('transactions-in.index') }}">Payments In</a></li>
                     <li class="breadcrumb-item active">Create</li>
                 </ol>
             </nav>
@@ -22,13 +22,13 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="card-title">Create New Payment</h5>
-                            <a href="{{ route('transactions.payment-in.index') }}" class="btn btn-outline-secondary">
+                            <a href="{{ route('transactions-in.index') }}" class="btn btn-outline-secondary">
                                 <i class="bi bi-arrow-left"></i> Back
                             </a>
                         </div>
 
                         <!-- Create Payment Form -->
-                        <form class="row g-3" method="POST" action="{{ route('transactions.payment-in.store') }}">
+                        <form class="row g-3" method="POST" action="{{ route('transactions-in.store') }}">
                             @csrf
 
                             <div class="col-md-6">

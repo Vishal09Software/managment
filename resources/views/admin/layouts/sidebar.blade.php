@@ -57,12 +57,12 @@
             </a>
             <ul id="transactions-nav" class="nav-content {{ request()->routeIs('transactions.*') ? 'show' : 'collapse' }}" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a class="{{ request()->routeIs('transactions.payment-in.*') ? 'active' : '' }}" href="{{ route('transactions.payment-in.index') }}">
+                    <a class="{{ request()->routeIs('transactions-in.*') ? 'active' : '' }}" href="{{ route('transactions-in.index') }}">
                         <i class="bi bi-circle"></i><span>Payment In</span>
                     </a>
                 </li>
                 <li>
-                    <a class="{{ request()->routeIs('transactions.payment-out.*') ? 'active' : '' }}" href="{{ route('transactions.payment-out.index') }}">
+                    <a class="{{ request()->routeIs('transactions-out.*') ? 'active' : '' }}" href="{{ route('transactions-out.index') }}">
                         <i class="bi bi-circle"></i><span>Payment Out</span>
                     </a>
                 </li>

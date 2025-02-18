@@ -9,7 +9,7 @@
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('transactions.payment-out.index') }}">Payments</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('transactions-out.index') }}">Payments Out</a></li>
                     <li class="breadcrumb-item active">Edit</li>
                 </ol>
             </nav>
@@ -22,13 +22,13 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="card-title">Edit Payment</h5>
-                            <a href="{{ route('transactions.payment-out.index') }}" class="btn btn-outline-secondary">
+                            <a href="{{ route('transactions-out.index') }}" class="btn btn-outline-secondary">
                                 <i class="bi bi-arrow-left"></i> Back
                             </a>
                         </div>
 
                         <!-- Edit Payment Form -->
-                        <form class="row g-3" method="POST" action="{{ route('transactions.payment-out.update', $payment->id) }}">
+                        <form class="row g-3" method="POST" action="{{ route('transactions-out.update', $payment->id) }}">
                             @csrf
                             @method('PUT')
 
@@ -115,7 +115,7 @@
                                     <input type="number" step="0.01" readonly
                                         class="form-control @error('total_amount') is-invalid @enderror" id="total_amount"
                                         name="total_amount" placeholder="Total Amount"
-                                        value="{{ number_format($payment->type == 'vendor' ? $payment->vendor->total_amount : $payment->vehicle->total_amount, 2, '.', '') }}">
+                                        value="{{ $payment->type == 'vendor' ? number_format($payment->vendor->total_amount ?? 0, 2, '.', '') : number_format($payment->vehicle->total_amount ?? 0, 2, '.', '') }}">
                                     <label for="total_amount">Total Amount</label>
                                     @error('total_amount')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -125,9 +125,10 @@
 
                             <div class="col-md-6">
                                 <div class="form-floating">
+
                                     <input type="number" step="0.01"
-                                        class="form-control @error('amount') is-invalid @enderror" id="amount"
-                                        name="amount" placeholder="Amount" value="{{ old('amount', $payment->amount) }}" required>
+                                        class="form-control @error('amount') is-invalid @enderror"
+                                        name="amount" placeholder="Amount" value="{{ number_format($payment->amount, 2, '.', '') }}" required>
                                     <label for="amount">Amount</label>
                                     @error('amount')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -140,7 +141,7 @@
                                     <input type="number" step="0.01" readonly
                                         class="form-control @error('remaining_amount') is-invalid @enderror"
                                         id="remaining_amount" name="remaining_amount" placeholder="Remaining Amount"
-                                        value="{{ number_format($payment->type == 'vendor' ? $payment->vendor->remaining_amount : $payment->vehicle->remaining_amount, 2, '.', '') }}">
+                                        value="{{ $payment->type == 'vendor' ? number_format($payment->vendor->remaining_amount ?? 0, 2, '.', '') : number_format($payment->vehicle->remaining_amount ?? 0, 2, '.', '') }}">
                                     <label for="remaining_amount">Remaining Amount</label>
                                     @error('remaining_amount')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -206,13 +207,17 @@
                     success: function(response) {
                         $('#total_amount').val(parseFloat(response.total_amount).toFixed(2));
                         $('#remaining_amount').val(parseFloat(response.remaining_amount).toFixed(2));
-                        // Reset amount input when selection changes
-                        $('#amount').val('0.00');
+                        // Keep existing amount value instead of resetting
+                        if (!$('#amount').val()) {
+                            $('#amount').val('0.00');
+                        }
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching amounts:', error);
                         $('#total_amount, #remaining_amount').val('0.00');
-                        $('#amount').val('0.00');
+                        if (!$('#amount').val()) {
+                            $('#amount').val('0.00');
+                        }
                     }
                 });
             }
@@ -277,10 +282,11 @@
                 cache: true
             }
         });
+
         // Call handleTypeChange on page load to handle initial state
         document.addEventListener('DOMContentLoaded', function() {
             handleTypeChange();
-            // Trigger amount fetch for initial selected value
+            // Show initial values without resetting amount
             const type = document.getElementById('typeField').value;
             if (type === 'vendor') {
                 getVendorAmounts('vendor', document.getElementById('vendorId').value);
