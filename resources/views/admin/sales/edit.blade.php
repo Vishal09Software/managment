@@ -95,7 +95,7 @@
 
                                 <div class="col-4">
                                     <div class="form-floating">
-                                        <input type="file" class="form-control" name="image" id="purchaseImage">
+                                        <input type="file" class="form-control" name="image" id="purchaseImage" accept="image/*">
                                         <label for="purchaseImage">Purchase Image</label>
                                         @if($sale->image)
                                             <img src="{{ asset('images/sales/'.$sale->image) }}" width="100" class="mt-2">
@@ -116,6 +116,12 @@
                                         <input type="number" class="form-control" name="k_weight" id="kantaWeight"
                                             placeholder="Kanta Weight" value="{{ $sale->k_weight }}" onchange="calculateTotals()">
                                         <label for="kantaWeight">Kanta Weight</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" name="supply_place" id="supplyPlace" placeholder="Supply Place" value="{{ $sale->supply_place }}">
+                                        <label for="supplyPlace">Supply Place</label>
                                     </div>
                                 </div>
 

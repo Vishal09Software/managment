@@ -95,6 +95,15 @@
                     @enderror
                   </div>
                 </div>
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    <input type="text" class="form-control @error('gst_number') is-invalid @enderror" id="gst_number" name="gst_number" placeholder="GST Number" value="{{ old('gst_number') }}">
+                    <label for="gst_number">GST Number</label>
+                    @error('gst_number')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                  </div>
+                </div>
 
                 <div class="col-md-12">
                   <div class="form-floating">

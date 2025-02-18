@@ -72,4 +72,5 @@ class DashboardController extends Controller
             'customers' => $customers
         ]);
     }
+
 }

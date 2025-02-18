@@ -90,7 +90,7 @@
 
                                 <div class="col-4">
                                     <div class="form-floating">
-                                        <input type="file" class="form-control" name="image" id="purchaseImage">
+                                        <input type="file" class="form-control" name="image" id="purchaseImage" accept="image/*">
                                         <label for="purchaseImage">Purchase Image</label>
                                     </div>
                                 </div>
@@ -109,6 +109,12 @@
                                     </div>
                                 </div>
 
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" name="supply_place" id="supplyPlace" placeholder="Supply Place">
+                                        <label for="supplyPlace">Supply Place</label>
+                                    </div>
+                                </div>
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-body">
@@ -214,6 +220,7 @@
 @endsection
 
 @section('scripts')
+
     <script>
         $(document).ready(function() {
             let itemCount = 1;

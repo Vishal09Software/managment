@@ -59,6 +59,10 @@
                                                         class="btn btn-sm btn-outline-info">
                                                         <i class="bi bi-eye"></i>
                                                     </a>
+                                                    <a href="{{ route('sales.invoice', $sale->id) }}"
+                                                        class="btn btn-sm btn-outline-success">
+                                                        <i class="bi bi-file-earmark-text"></i>
+                                                    </a>
                                                     <a href="{{ route('sales.edit', $sale->id) }}"
                                                         class="btn btn-sm btn-outline-primary">
                                                         <i class="bi bi-pencil"></i>

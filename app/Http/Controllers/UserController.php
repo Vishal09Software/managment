@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -67,6 +68,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
@@ -88,6 +90,10 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->update($data);
 
+
+        if ($request->profile) {
+            return redirect()->route('profile')->with('success', 'Profile updated successfully');
+        }
         return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 
@@ -97,5 +103,29 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')->with('error', 'User deleted successfully');
+    }
+
+
+    public function updatePassword(Request $request, $id)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:6|confirmed',
+            'password_confirmation' => 'required'
+        ]);
+
+        $user = User::findOrFail($id);
+
+        // Check if current password matches
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->with('error', 'Current password is incorrect');
+        }
+
+        // Update password
+        $user->update([
+            'password' => bcrypt($request->password)
+        ]);
+
+        return redirect()->route('profile')->with('success', 'Password updated successfully');
     }
 }

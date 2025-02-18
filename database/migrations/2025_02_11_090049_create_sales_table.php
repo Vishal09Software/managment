@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 return new class extends Migration
 {
     /**
@@ -39,6 +39,9 @@ return new class extends Migration
             $table->string('p_total');
             $table->string('s_total');
             $table->string('v_total');
+            $table->string('supply_place');
+            $table->string('invoice_number');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

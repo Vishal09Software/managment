@@ -60,6 +60,10 @@
                                     <h6>Weight & Price Details</h6>
                                     <table class="table table-bordered">
                                         <tr>
+                                            <th width="30%">Product Name</th>
+                                            <td>{{ $sale->product->name ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
                                             <th width="30%">Rawana Weight</th>
                                             <td>{{ $sale->r_weight }}</td>
                                         </tr>
@@ -89,6 +93,7 @@
                                             <th width="30%">Mobile</th>
                                             <td>{{ $sale->vendor_mobile }}</td>
                                         </tr>
+
                                     </table>
                                 </div>
 
@@ -103,6 +108,11 @@
                                             <th width="30%">Mobile</th>
                                             <td>{{ $sale->customer_mobile }}</td>
                                         </tr>
+                                        <tr>
+                                            <th width="30%">Supply Address</th>
+                                            <td>{{ $sale->supply_place ?? 'N/A' }}</td>
+                                        </tr>
+
                                     </table>
                                 </div>
 

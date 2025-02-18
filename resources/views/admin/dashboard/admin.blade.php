@@ -22,12 +22,8 @@
                         <!-- Sales Card -->
                         <div class="col-xxl-4 col-md-6">
                             <div class="card info-card sales-card">
-
-
-
                                 <div class="card-body">
                                     <h5 class="card-title">Sales <span>| Today</span></h5>
-
                                     <div class="d-flex align-items-center">
                                         <div
                                             class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -48,9 +44,6 @@
                         <!-- Revenue Card -->
                         <div class="col-xxl-4 col-md-6">
                             <div class="card info-card revenue-card">
-
-
-
                                 <div class="card-body">
                                     <h5 class="card-title">Revenue <span>| This Month</span></h5>
 
@@ -67,13 +60,11 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div><!-- End Revenue Card -->
 
                         <!-- Customers Card -->
                         <div class="col-xxl-4 col-xl-12">
-
                             <div class="card info-card customers-card">
                                 <div class="card-body">
                                     <h5 class="card-title">Customers <span>| This Year</span></h5>
@@ -94,9 +85,7 @@
 
                                 </div>
                             </div>
-
                         </div><!-- End Customers Card -->
-
                     </div>
                 </div>
                 <div class="col-lg-8">

@@ -16,6 +16,7 @@ class Customer extends Model
         'gender',
         'dob',
         'image',
+        'gst_number',
         'status'
     ];
 

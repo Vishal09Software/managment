@@ -9,6 +9,10 @@ use App\Models\Vehicle;
 use App\Models\Product;
 use App\Models\Tax;
 use App\Models\Sale;
+use App\Models\Setting;
+use App\Models\PaymentIn;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\View;
 class SalesController extends Controller
 {
     public function index()
@@ -44,14 +48,21 @@ class SalesController extends Controller
             'r_weight' => 'required|numeric',
             'k_weight' => 'required|numeric',
             'product_id' => 'required',
-            'p_price' => 'required|numeric',
-            's_price' => 'required|numeric',
+            'p_price' => 'required|numeric|gt:0',
+            's_price' => 'required|numeric|gt:p_price',
             'tax_id' => 'required',
             'remark' => 'nullable',
             'p_total' => 'required|numeric',
             's_total' => 'required|numeric',
-            'v_total' => 'required|numeric'
+            'v_total' => 'required|numeric',
+            'supply_place' => 'required',
         ]);
+
+        // Generate invoice number
+        $lastSale = Sale::latest()->first();
+        $lastInvoiceNumber = $lastSale ? intval(substr($lastSale->invoice_number, 3)) : 0;
+        $newInvoiceNumber = 'INV' . str_pad($lastInvoiceNumber + 1, 6, '0', STR_PAD_LEFT);
+        $validated['invoice_number'] = $newInvoiceNumber;
 
         // Get customer details
         $customer = Customer::find($request->customer_id);
@@ -120,13 +131,14 @@ class SalesController extends Controller
             'r_weight' => 'required|numeric',
             'k_weight' => 'required|numeric',
             'product_id' => 'required',
-            'p_price' => 'required|numeric',
-            's_price' => 'required|numeric',
+            'p_price' => 'required|numeric|gt:0',
+            's_price' => 'required|numeric|gt:p_price',
             'tax_id' => 'required',
             'remark' => 'nullable',
             'p_total' => 'required|numeric',
             's_total' => 'required|numeric',
-            'v_total' => 'required|numeric'
+            'v_total' => 'required|numeric',
+            'supply_place' => 'required',
         ]);
 
         // Get customer details
@@ -188,6 +200,17 @@ class SalesController extends Controller
 
         return redirect()->route('sales.index')
             ->with('error', 'Sale deleted successfully');
+    }
+
+    public function invoice($id)
+    {
+        $sale = Sale::findOrFail($id);
+        $company = Setting::first();
+        $payment = PaymentIn::where('customer_id', $sale->customer_id)->first();
+
+        $pdf = PDF::loadView('admin.sales.invoice', compact('sale', 'company', 'payment'));
+
+        return $pdf->download('invoice-' . $sale->id . '.pdf');
     }
 
 }

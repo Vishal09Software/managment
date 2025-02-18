@@ -52,16 +52,39 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('taxes.*') ? '' : 'collapsed' }}" data-bs-target="#settings-nav" data-bs-toggle="collapse" href="#">
+            <a class="nav-link {{ request()->routeIs('transactions.*') ? '' : 'collapsed' }}" data-bs-target="#transactions-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-currency-exchange"></i><span>Transactions</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="transactions-nav" class="nav-content {{ request()->routeIs('transactions.*') ? 'show' : 'collapse' }}" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a class="{{ request()->routeIs('transactions.payment-in.*') ? 'active' : '' }}" href="{{ route('transactions.payment-in.index') }}">
+                        <i class="bi bi-circle"></i><span>Payment In</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="{{ request()->routeIs('transactions.payment-out.*') ? 'active' : '' }}" href="{{ route('transactions.payment-out.index') }}">
+                        <i class="bi bi-circle"></i><span>Payment Out</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('settings.*') || request()->routeIs('taxes.*') ? '' : 'collapsed' }}" data-bs-target="#settings-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-gear"></i><span>Settings</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="settings-nav" class="nav-content {{ request()->routeIs('taxes.*') ? 'show' : 'collapse' }}" data-bs-parent="#sidebar-nav">
+            <ul id="settings-nav" class="nav-content {{ request()->routeIs('settings.*') || request()->routeIs('taxes.*') ? 'show' : 'collapse' }}" data-bs-parent="#sidebar-nav">
                 <li>
                     <a class="{{ request()->routeIs('taxes.*') ? 'active' : '' }}" href="{{ route('taxes.index') }}">
                         <i class="bi bi-circle"></i><span>Tax Settings</span>
                     </a>
                 </li>
 
+                <li>
+                    <a class="{{ request()->routeIs('settings.*') ? 'active' : '' }}" href="{{ route('settings.index') }}">
+                        <i class="bi bi-circle"></i><span>General Settings</span>
+                    </a>
+                </li>
             </ul>
         </li>
     </ul>

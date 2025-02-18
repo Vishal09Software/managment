@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Sale extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'date',
         'vendor_id',
@@ -32,6 +33,23 @@ class Sale extends Model
         'remark',
         'p_total',
         's_total',
-        'v_total'
+        'v_total',
+        'supply_place',
+        'invoice_number',
+
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+
+
+
 }

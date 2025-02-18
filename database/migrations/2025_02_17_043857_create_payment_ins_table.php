@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
 return new class extends Migration
 {
     /**
@@ -13,19 +12,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('payment_ins', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('mobile');
-            $table->string('address');
-            $table->string('gender');
-            $table->date('dob');
-            $table->string('gst_number')->nullable();
-            $table->string('image')->nullable();
-            $table->boolean('status')->default(true);
+            $table->string('customer_id');
+            $table->string('reference_no');
+            $table->decimal('amount', 10, 2);
+            $table->string('payment_method');
+            $table->date('payment_date');
+            $table->text('remarks')->nullable();
             $table->softDeletes();
-
             $table->timestamps();
         });
     }
@@ -35,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('payment_ins');
     }
 };

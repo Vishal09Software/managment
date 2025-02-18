@@ -41,6 +41,7 @@ class CustomerController extends Controller
             'address' => 'required',
             'gender' => 'required',
             'dob' => 'required|date',
+            'gst_number' => 'nullable',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -51,6 +52,7 @@ class CustomerController extends Controller
             'address' => $request->address,
             'gender' => $request->gender,
             'dob' => $request->dob,
+            'gst_number' => $request->gst_number,
             'status' => $request->status ? 1 : 0
         ];
 
@@ -87,6 +89,7 @@ class CustomerController extends Controller
             'address' => 'required',
             'gender' => 'required',
             'dob' => 'required|date',
+            'gst_number' => 'nullable',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -99,6 +102,7 @@ class CustomerController extends Controller
             'address' => $request->address,
             'gender' => $request->gender,
             'dob' => $request->dob,
+            'gst_number' => $request->gst_number,
             'status' => $request->status ? 1 : 0
         ];
 
