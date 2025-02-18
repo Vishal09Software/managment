@@ -12,7 +12,6 @@ class TransactionsInController extends Controller
 {
     public function index()
     {
-
         $customers = Customer::where('status', 1)
             ->orderBy('name')
             ->get();
