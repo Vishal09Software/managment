@@ -10,6 +10,13 @@
         </li><!-- End Dashboard Nav -->
 
         <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('sales.*') ? '' : 'collapsed' }}" href="{{ route('sales.index') }}">
+                <i class="bi bi-cart"></i>
+                <span>Sales</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('users.*') ? '' : 'collapsed' }}" href="{{ route('users.index') }}">
                 <i class="bi bi-people"></i>
                 <span>Users</span>
@@ -44,12 +51,7 @@
             </a>
         </li>
 
-        <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('sales.*') ? '' : 'collapsed' }}" href="{{ route('sales.index') }}">
-                <i class="bi bi-cart"></i>
-                <span>Sales</span>
-            </a>
-        </li>
+
 
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('transactions.*') ? '' : 'collapsed' }}" data-bs-target="#transactions-nav" data-bs-toggle="collapse" href="#">
