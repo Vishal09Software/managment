@@ -168,6 +168,13 @@
 @endsection
 
 @section('scripts')
+
+<script src="{{ url('admin_theme/assets/js/vendor.js') }}"></script>
+<script src="{{ url('admin_theme/assets/js/vehicle.js') }}"></script>
+<script>
+    var baseUrl = '{{ url('/') }}';
+</script>
+
     <script>
         function handleTypeChange() {
             const type = document.getElementById('typeField').value;
@@ -216,66 +223,6 @@
                 });
             }
         }
-
-        $("#vendorId").select2({
-            placeholder: "Select Vendor",
-            allowClear: true,
-            width: '100%',
-            theme: 'bootstrap-5',
-            minimumInputLength: 1,
-            ajax: {
-                url: '{{ route('sales.vendorsearch') }}',
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: data.map(function(vendor) {
-                            return {
-                                id: vendor.id,
-                                text: vendor.name
-                            };
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
-
-        $("#vehicleId").select2({
-            placeholder: "Select Vehicle",
-            allowClear: true,
-            width: '100%',
-            theme: 'bootstrap-5',
-            minimumInputLength: 1,
-            ajax: {
-                url: '{{ route('sales.vehicleSearch') }}',
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: data.map(function(vehicle) {
-                            return {
-                                id: vehicle.id,
-                                text: vehicle.driver_name ?
-                                    vehicle.driver_name + ' (' + vehicle.vehicle_number + ')' :
-                                    vehicle.owner_name + ' (' + vehicle.vehicle_number + ')'
-                            };
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
         // Call handleTypeChange on page load to handle initial state
         document.addEventListener('DOMContentLoaded', function() {
             handleTypeChange();

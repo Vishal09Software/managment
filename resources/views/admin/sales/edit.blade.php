@@ -241,6 +241,13 @@
 @endsection
 
 @section('scripts')
+
+<script src="{{ url('admin_theme/assets/js/vendor.js') }}"></script>
+<script src="{{ url('admin_theme/assets/js/customer.js') }}"></script>
+<script src="{{ url('admin_theme/assets/js/vehicle.js') }}"></script>
+<script>
+    var baseUrl = '{{ url('/') }}';
+</script>
     <script>
         $(document).ready(function() {
             let itemCount = 1;
@@ -265,98 +272,6 @@
             // Handle tax selection change
             $('#taxSelect').change(function() {
                 calculateTotals();
-            });
-
-            // Initialize Select2 for vendor dropdown
-            $("#vendorId").select2({
-                placeholder: "Select Vendor",
-                allowClear: true,
-                width: '100%',
-                theme: 'bootstrap-5',
-                minimumInputLength: 1,
-                ajax: {
-                    url: '{{ route("sales.vendorsearch") }}',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.map(function(vendor) {
-                                return {
-                                    id: vendor.id,
-                                    text: vendor.name
-                                };
-                            })
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            // Initialize Select2 for customer dropdown
-            $("#customerId").select2({
-                placeholder: "Select Customer",
-                allowClear: true,
-                width: '100%',
-                theme: 'bootstrap-5',
-                minimumInputLength: 1,
-                ajax: {
-                    url: '{{ route("customerSearch") }}',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.map(function(customer) {
-                                return {
-                                    id: customer.id,
-                                    text: customer.name
-                                };
-                            })
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            // Initialize Select2 for vehicle dropdown
-            $("#vehicleId").select2({
-                placeholder: "Select Vehicle",
-                allowClear: true,
-                width: '100%',
-                theme: 'bootstrap-5',
-                minimumInputLength: 1,
-                ajax: {
-                    url: '{{ route("sales.vehicleSearch") }}',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.map(function(vehicle) {
-                                return {
-                                    id: vehicle.id,
-                                    text: vehicle.driver_name ?
-                                        vehicle.driver_name + ' (' + vehicle.vehicle_name + ')' :
-                                        vehicle.owner_name + ' (' + vehicle.vehicle_name + ')'
-                                };
-                            })
-                        };
-                    },
-                    cache: true
-                }
             });
         });
 

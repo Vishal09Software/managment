@@ -133,36 +133,13 @@
 @endsection
 
 @section('scripts')
-    <script>
-        $("#customerId").select2({
-            placeholder: "Select Customer",
-            allowClear: true,
-            width: '100%',
-            theme: 'bootstrap-5',
-            minimumInputLength: 1,
-            ajax: {
-                url: '{{ route('customerSearch') }}',
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: data.map(function(customer) {
-                            return {
-                                id: customer.id,
-                                text: customer.name
-                            };
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
 
+    <script src="{{ url('admin_theme/assets/js/customer.js') }}"></script>
+    <script>
+        var baseUrl = '{{ url('/') }}';
+    </script>
+
+    <script>
         // Load initial amounts on page load for selected customer
         $(document).ready(function () {
             let customerId = $('#customerId').val();
