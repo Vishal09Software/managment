@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Tax;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Services\FileUploadService;
 
 class ProductController extends Controller
 {
+    protected $fileUploadService;
+
+    public function __construct(FileUploadService $fileUploadService)
+    {
+        $this->fileUploadService = $fileUploadService;
+    }
+
     public function index(Request $request)
     {
         $query = Product::query();
@@ -55,10 +62,10 @@ class ProductController extends Controller
         $validated['status'] = $request->status ? 1 : 0;
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $filename = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/product'), $filename);
-            $validated['image'] = $filename;
+            $validated['image'] = $this->fileUploadService->upload(
+                $request->file('image'),
+                'images/product'
+            );
         }
 
         Product::create($validated);
@@ -87,15 +94,11 @@ class ProductController extends Controller
         $validated['status'] = $request->status ? 1 : 0;
 
         if ($request->hasFile('image')) {
-            // Delete old image
-            if ($product->image) {
-                Storage::delete('public/images/product/' . $product->image);
-            }
-
-            $image = $request->file('image');
-            $filename = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/product'), $filename);
-            $validated['image'] = $filename;
+            $validated['image'] = $this->fileUploadService->upload(
+                $request->file('image'),
+                'images/product',
+                $product->image
+            );
         }
 
         $product->update($validated);
@@ -109,14 +112,8 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         // Delete product image if exists
-        if ($product->image && file_exists(public_path('images/product/' . $product->image))) {
-            unlink(public_path('images/product/' . $product->image));
-
-            // Delete empty product image folder if exists
-            $folderPath = public_path('images/product');
-            if (is_dir($folderPath) && count(scandir($folderPath)) <= 2) { // . and .. directories
-                rmdir($folderPath);
-            }
+        if ($product->image) {
+            $this->fileUploadService->delete('images/product/' . $product->image);
         }
 
         $product->delete();

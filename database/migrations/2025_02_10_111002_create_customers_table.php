@@ -17,14 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('mobile');
+            $table->string('mobile')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('country')->nullable();
             $table->string('zipcode')->nullable();
-            $table->string('address');
-            $table->string('gender');
-            $table->date('dob');
+            $table->string('address')->nullable();
+            $table->string('gender')->nullable();
+            $table->date('dob')->nullable();
             $table->string('gst_number')->nullable();
             $table->string('gst_code')->nullable();
             $table->string('image')->nullable();

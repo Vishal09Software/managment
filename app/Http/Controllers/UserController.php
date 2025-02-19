@@ -35,22 +35,14 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'mobile' => 'required',
-            'password' => 'required|min:6',
-            'password_confirmation' => 'required|same:password'
+            'password' => 'required|min:6|confirmed'
         ]);
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'password' => bcrypt($request->password)
-
-        ]);
-
+        $validated['password'] = bcrypt($validated['password']);
+        User::create($validated);
         return redirect()->route('users.index')->with('success', 'User created successfully');
     }
 
@@ -68,8 +60,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        // dd($request->all());
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
             'mobile' => 'required',
@@ -77,24 +68,17 @@ class UserController extends Controller
             'password_confirmation' => 'same:password'
         ]);
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-        ];
+        $data = collect($validated)->except('password_confirmation')->toArray();
 
-        if (!empty($request->password)) {
-            $data['password'] = bcrypt($request->password);
+        if (!empty($validated['password'])) {
+            $data['password'] = bcrypt($validated['password']);
         }
 
         $user = User::findOrFail($id);
         $user->update($data);
 
-
-        if ($request->profile) {
-            return redirect()->route('profile')->with('success', 'Profile updated successfully');
-        }
-        return redirect()->route('users.index')->with('success', 'User updated successfully');
+        $route = $request->profile ? 'profile' : 'users.index';
+        return redirect()->route($route)->with('success', 'User updated successfully');
     }
 
     public function destroy($id)

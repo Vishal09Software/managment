@@ -13,12 +13,19 @@ use App\Models\Setting;
 use App\Models\PaymentIn;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\View;
+use App\Services\FileUploadService;
+
 class SalesController extends Controller
 {
+    protected $fileUploadService;
+
+    public function __construct(FileUploadService $fileUploadService)
+    {
+        $this->fileUploadService = $fileUploadService;
+    }
     public function index(Request $request)
     {
         $query = Sale::query();
-
         if ($request->has('fields')) {
             $fields = $request->input('fields');
 
@@ -54,9 +61,6 @@ class SalesController extends Controller
         return view('admin.sales.create', compact('vendors', 'customers', 'vehicles', 'products', 'taxes'));
     }
 
-
-
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -87,35 +91,34 @@ class SalesController extends Controller
         $validated['invoice_number'] = $newInvoiceNumber;
 
         // Get customer details
-        $customer = Customer::find($request->customer_id);
-        $validated['customer_id'] = $customer->id;
-        $validated['customer_name'] = $customer->name;
-        $validated['customer_mobile'] = $customer->mobile;
+        $validated = array_merge(
+            $validated,
+            Sale::getCustomerDetails($request->customer_id)
+        );
 
         // Get vendor details
-        $vendor = Vendor::find($request->vendor_id);
-        $validated['vendor_id'] = $vendor->id;
-        $validated['vendor_name'] = $vendor->name;
-        $validated['vendor_mobile'] = $vendor->mobile;
+        $validated = array_merge(
+            $validated,
+            Sale::getVendorDetails($request->vendor_id)
+        );
 
         // Get vehicle details
-        $vehicle = Vehicle::find($request->vehicle_id);
-        $validated['vehicle_id'] = $vehicle->id;
-        $validated['driver_name'] = $vehicle->driver_name;
-        $validated['driver_phone'] = $vehicle->driver_phone;
-        $validated['vehicle_number'] = $vehicle->vehicle_name;
+        $validated = array_merge(
+            $validated,
+            Sale::getVehicleDetails($request->vehicle_id)
+        );
 
         // Get tax details
-        $tax = Tax::find($request->tax_id);
-        $validated['tax_id'] = $tax->id;
-        $validated['tax_name'] = $tax->tax_name;
-        $validated['tax_rate'] = $tax->tax_rate;
+        $validated = array_merge(
+            $validated,
+            Sale::getTaxDetails($request->tax_id)
+        );
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/sales'), $imageName);
-            $validated['image'] = $imageName;
+            $validated['image'] = $this->fileUploadService->upload(
+                $request->file('image'),
+                'images/sales'
+            );
         }
 
         $sale = Sale::create($validated);
@@ -165,46 +168,38 @@ class SalesController extends Controller
 
         // Get customer details
         $customer = Customer::find($request->customer_id);
-        $validated['customer_id'] = $customer->id;
-        $validated['customer_name'] = $customer->name;
-        $validated['customer_mobile'] = $customer->mobile;
+        // Get customer details
+        $validated = array_merge(
+            $validated,
+            Sale::getCustomerDetails($request->customer_id)
+        );
 
         // Get vendor details
-        $vendor = Vendor::find($request->vendor_id);
-        $validated['vendor_id'] = $vendor->id;
-        $validated['vendor_name'] = $vendor->name;
-        $validated['vendor_mobile'] = $vendor->mobile;
+        $validated = array_merge(
+            $validated,
+            Sale::getVendorDetails($request->vendor_id)
+        );
 
         // Get vehicle details
-        $vehicle = Vehicle::find($request->vehicle_id);
-        $validated['vehicle_id'] = $vehicle->id;
-        $validated['driver_name'] = $vehicle->driver_name;
-        $validated['driver_phone'] = $vehicle->driver_phone;
-        $validated['vehicle_number'] = $vehicle->vehicle_name;
+        $validated = array_merge(
+            $validated,
+            Sale::getVehicleDetails($request->vehicle_id)
+        );
 
         // Get tax details
-        $tax = Tax::find($request->tax_id);
-        $validated['tax_id'] = $tax->id;
-        $validated['tax_name'] = $tax->tax_name;
-        $validated['tax_rate'] = $tax->tax_rate;
+        $validated = array_merge(
+            $validated,
+            Sale::getTaxDetails($request->tax_id)
+        );
 
         if ($request->hasFile('image')) {
-            // Delete old image
-            if ($sale->image) {
-                $oldImagePath = public_path('images/sales/') . $sale->image;
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
-                }
-            }
-
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/sales'), $imageName);
-            $validated['image'] = $imageName;
+            $validated['image'] = $this->fileUploadService->upload(
+                $request->file('image'),
+                'images/sales',
+                $sale->image
+            );
         }
-
         $sale->update($validated);
-
         return redirect()->route('sales.index')
             ->with('success', 'Sale updated successfully');
     }
@@ -212,14 +207,9 @@ class SalesController extends Controller
     public function destroy(Sale $sale)
     {
         if ($sale->image) {
-            $imagePath = public_path('images/sales/') . $sale->image;
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
-            }
+            $this->fileUploadService->delete('images/sales/' . $sale->image);
         }
-
         $sale->delete();
-
         return redirect()->route('sales.index')
             ->with('error', 'Sale deleted successfully');
     }
@@ -229,9 +219,7 @@ class SalesController extends Controller
         $sale = Sale::findOrFail($id);
         $company = Setting::first();
         $payment = PaymentIn::where('customer_id', $sale->customer_id)->first();
-
         $pdf = PDF::loadView('admin.sales.invoice', compact('sale', 'company', 'payment'));
-
         return $pdf->download('invoice-' . $sale->id . '.pdf');
     }
 

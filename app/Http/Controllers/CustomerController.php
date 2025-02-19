@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Customer;
-use App\Models\GST;
+use App\Models\State;
+use App\Services\FileUploadService;
+
 class CustomerController extends Controller
 {
+    protected $fileUploadService;
+
+    public function __construct(FileUploadService $fileUploadService)
+    {
+        $this->fileUploadService = $fileUploadService;
+    }
+
     public function index(Request $request)
     {
         $query = Customer::query();
@@ -29,13 +38,13 @@ class CustomerController extends Controller
 
     public function create()
     {
-        $gsts = GST::all();
-        return view('admin.customer.create', compact('gsts'));
+        $states = State::all();
+        return view('admin.customer.create', compact('states'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:customers',
             'mobile' => 'required',
@@ -51,31 +60,15 @@ class CustomerController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'address' => $request->address,
-            'gender' => $request->gender,
-            'dob' => $request->dob,
-            'gst_number' => $request->gst_number,
-            'gst_code' => $request->gst_code,
-            'city' => $request->city,
-            'state' => $request->state,
-            'country' => $request->country,
-            'zipcode' => $request->zipcode,
-            'status' => $request->status ? 1 : 0
-        ];
-
+        $data = $validated;
+        $data['status'] = $request->status ? 1 : 0;
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/customer'), $imageName);
-            $data['image'] = $imageName;
+            $data['image'] = $this->fileUploadService->upload(
+                $request->file('image'),
+                'images/customer'
+            );
         }
-
         Customer::create($data);
-
         return redirect()->route('customers.index')->with('success', 'Customer created successfully');
     }
 
@@ -88,13 +81,13 @@ class CustomerController extends Controller
     public function edit($id)
     {
         $customer = Customer::findOrFail($id);
-        $gsts = GST::all();
-        return view('admin.customer.edit', compact('customer', 'gsts'));
+        $states = State::all();
+        return view('admin.customer.edit', compact('customer', 'states'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:customers,email,'.$id,
             'mobile' => 'required',
@@ -112,32 +105,15 @@ class CustomerController extends Controller
 
         $customer = Customer::findOrFail($id);
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'address' => $request->address,
-            'gender' => $request->gender,
-            'dob' => $request->dob,
-            'gst_number' => $request->gst_number,
-            'gst_code' => $request->gst_code,
-            'city' => $request->city,
-            'state' => $request->state,
-            'country' => $request->country,
-            'zipcode' => $request->zipcode,
-            'status' => $request->status ? 1 : 0
-        ];
+        $data = $validated;
+        $data['status'] = $request->status ? 1 : 0;
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($customer->image && file_exists(public_path('images/customer/' . $customer->image))) {
-                unlink(public_path('images/customer/' . $customer->image));
-            }
-
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/customer'), $imageName);
-            $data['image'] = $imageName;
+            $data['image'] = $this->fileUploadService->upload(
+                $request->file('image'),
+                'images/customer',
+                $customer->image
+            );
         }
 
         $customer->update($data);
@@ -148,20 +124,10 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         $customer = Customer::findOrFail($id);
-
-        // Delete customer image if exists
-        if ($customer->image && file_exists(public_path('images/customer/' . $customer->image))) {
-            unlink(public_path('images/customer/' . $customer->image));
-
-            // Delete empty customer image folder if exists
-            $folderPath = public_path('images/customer');
-            if (is_dir($folderPath) && count(scandir($folderPath)) <= 2) { // . and .. directories
-                rmdir($folderPath);
-            }
+        if ($customer->image) {
+            $this->fileUploadService->delete('images/customer/' . $customer->image);
         }
-
         $customer->delete();
-
         return redirect()->route('customers.index')->with('error', 'Customer deleted successfully');
     }
 

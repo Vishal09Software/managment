@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Setting;
-use App\Models\GST;
+use App\Models\State;
 class SettingController extends Controller
 {
     public function index()
     {
         $settings = Setting::first();
-        $gsts = GST::all();
-        return view('admin.setting.general', compact('settings', 'gsts'));
+        $states = State::all();
+        return view('admin.setting.general', compact('settings', 'states'));
     }
 
     public function update(Request $request)

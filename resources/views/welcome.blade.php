@@ -1,22 +1,44 @@
-<script>
-        // Declare arrays as global variables
-        window.element = ["p", "div", "img", "h1", "h2", "h3", "h4", "h5", "h6"];
-        window.config = ["top", "bottom", "center"];
+<?php
+function create($elements, $config) {
+    $result = [];
+    $position = 0;
+    $elementCount = count($elements);
 
-    function addElementAtIndex(arr, index, element) {
-        arr.splice(index, 0, element); // Insert the element at the specified index
-        console.log(arr.join()); // Log the modified array
+    // Step 1: Process elements based on config
+    foreach ($config as $item) {
+        if ($item === 'block' && $position < $elementCount) {
+            $result[] = $elements[$position]; // Insert element at position
+            $position++;
+        } elseif ($item === 'add') {
+            $result[] = 'add'; // Insert 'add' where needed
+        }
     }
-    // Example usage:
 
-    // Add top element at start
-    addElementAtIndex(window.element, 0, window.config[0]);
-    // Add center element after each existing element
-    for(var i = 2; i < window.element.length; i+=2) {
-        addElementAtIndex(window.element, i, window.config[2]);
+    // Step 2: Handle remaining elements properly
+    $remaining = array_slice($elements, $position);
+    if (!empty($remaining)) {
+        $inserted = 0;
+        foreach ($remaining as $elem) {
+            if ($inserted % 3 === 0 && $inserted !== 0) {
+                $result[] = 'add'; // Add "add" after every 3 remaining elements
+            }
+            $result[] = $elem;
+            $inserted++;
+        }
     }
-    // Add bottom element at end
-    addElementAtIndex(window.element, window.element.length, window.config[1]);
 
-    console.log("Final array:", window.element);
-</script>
+    // Step 3: Ensure the last element is "add" when config is greater than elements
+    if (empty($result) || end($result) !== 'add') {
+        $result[] = 'add';
+    }
+
+    return $result;
+}
+
+// Example usage
+$elements = ['p', 'div', 'img',];
+$config = ['add', 'block', 'add', 'block', 'block', 'add', 'block', 'add', 'block',];
+
+$output = create($elements, $config);
+print_r($output);
+?>

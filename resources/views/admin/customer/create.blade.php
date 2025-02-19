@@ -88,7 +88,7 @@
 
                 <div class="col-md-4">
                   <div class="form-floating">
-                    <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image">
+                    <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
                     <label for="image">Profile Image</label>
                     @error('image')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -100,10 +100,10 @@
                         <select class="form-select @error('gst_code') is-invalid @enderror" id="gst_code"
                             name="gst_code" style="max-width: 200px;">
                             <option value="">Select GST Code</option>
-                            @foreach ($gsts as $gst)
-                                <option value="{{ $gst->gst_code }}"
-                                    {{ old('gst_code') == $gst->gst_code ? 'selected' : '' }}>
-                                    {{ $gst->name }} ({{ $gst->gst_code }})
+                            @foreach ($states as $state)
+                                <option value="{{ $state->gst_code }}"
+                                    {{ old('gst_code') == $state->gst_code ? 'selected' : '' }}>
+                                    {{ $state->name }} ({{ $state->gst_code }})
                                 </option>
                             @endforeach
                         </select>

@@ -49,6 +49,46 @@ class Sale extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public static function getCustomerDetails($customerId)
+    {
+        $customer = Customer::findOrFail($customerId);
+        return [
+            'customer_id' => $customer->id,
+            'customer_name' => $customer->name,
+            'customer_mobile' => $customer->mobile,
+        ];
+    }
+
+    public static function getVendorDetails($vendorId)
+    {
+        $vendor = Vendor::findOrFail($vendorId);
+        return [
+            'vendor_id' => $vendor->id,
+            'vendor_name' => $vendor->name,
+            'vendor_mobile' => $vendor->mobile,
+        ];
+    }
+
+    public static function getVehicleDetails($vehicleId)
+    {
+        $vehicle = Vehicle::findOrFail($vehicleId);
+        return [
+            'vehicle_id' => $vehicle->id,
+            'driver_name' => $vehicle->driver_name,
+            'driver_phone' => $vehicle->driver_phone,
+            'vehicle_number' => $vehicle->vehicle_name,
+        ];
+    }
+
+    public static function getTaxDetails($taxId)
+    {
+        $tax = Tax::findOrFail($taxId);
+        return [
+            'tax_id' => $tax->id,
+            'tax_name' => $tax->tax_name,
+            'tax_rate' => $tax->tax_rate,
+        ];
+    }
 
 
 

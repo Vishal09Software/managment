@@ -27,18 +27,18 @@ return new class extends Migration
             $table->string('driver_phone');
             $table->string('vehicle_rate');
             $table->string('image');
-            $table->string('r_weight');
-            $table->string('k_weight');
+            $table->string('r_weight'); //rawana weight
+            $table->string('k_weight'); //kanta weight
             $table->string('product_id');
-            $table->string('p_price');
-            $table->string('s_price');
+            $table->string('p_price'); //purchase price
+            $table->string('s_price'); //sale price
             $table->string('tax_id')->index();
             $table->string('tax_name');
             $table->string('tax_rate');
             $table->string('remark');
-            $table->string('p_total');
-            $table->string('s_total');
-            $table->string('v_total');
+            $table->string('p_total'); //purchase total
+            $table->string('s_total'); //sale total
+            $table->string('v_total'); //vehicle total
             $table->string('supply_place');
             $table->string('invoice_number');
             $table->softDeletes();

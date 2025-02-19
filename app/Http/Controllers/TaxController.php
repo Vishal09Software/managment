@@ -22,7 +22,6 @@ class TaxController extends Controller
         ]);
 
         Tax::create($request->all());
-
         return redirect()->route('taxes.index')->with('success', 'Tax rate added successfully');
     }
 

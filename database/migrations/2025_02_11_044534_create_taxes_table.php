@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('taxes', function (Blueprint $table) {
             $table->id();
-            $table->string('tax_name');
+            $table->string('tax_name')->index();
             $table->decimal('tax_rate', 8, 2);
             $table->boolean('status')->default(false);
             $table->softDeletes();

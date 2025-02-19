@@ -90,7 +90,7 @@
 
                 <div class="col-md-4">
                   <div class="form-floating">
-                    <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image">
+                    <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
                     <label for="image">Product Image</label>
                     @error('image')
                         <div class="invalid-feedback">{{ $message }}</div>

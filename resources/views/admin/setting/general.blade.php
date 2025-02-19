@@ -82,10 +82,10 @@
                                     <select class="form-select @error('gst_code') is-invalid @enderror" id="gst_code"
                                         name="gst_code" style="max-width: 200px;">
                                         <option value="">Select GST Code</option>
-                                        @foreach ($gsts as $gst)
-                                            <option value="{{ $gst->gst_code }}"
-                                                {{ old('gst_code', $settings->gst_code ?? '') == $gst->gst_code ? 'selected' : '' }}>
-                                                {{ $gst->name }} ({{ $gst->gst_code }})
+                                        @foreach ($states as $state)
+                                            <option value="{{ $state->gst_code }}"
+                                                {{ old('gst_code', $settings->gst_code ?? '') == $state->gst_code ? 'selected' : '' }}>
+                                                {{ $state->name }} ({{ $state->gst_code }})
                                             </option>
                                         @endforeach
                                     </select>
@@ -109,11 +109,12 @@
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="file" class="form-control @error('business_logo') is-invalid @enderror"
-                                        id="business_logo" name="business_logo" placeholder="Business Logo">
+                                        id="business_logo" name="business_logo" placeholder="Business Logo"  accept="image/*">
                                     <label for="business_logo">Business Logo</label>
-                                    @if ($settings->business_logo)
+                                    @if (isset($settings) && $settings->business_logo)
                                         <img src="{{ asset('images/settings/' . $settings->business_logo) }}"
-                                            alt="Current Logo" class="mt-2" style="max-width: 200px;">
+                                            alt="Current Logo" class="mt-2" style="max-width: 200px;"
+                                           >
                                     @endif
                                     @error('business_logo')
                                         <div class="invalid-feedback">{{ $message }}</div>

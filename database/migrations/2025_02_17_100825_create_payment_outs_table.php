@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('payment_outs', function (Blueprint $table) {
             $table->id();
             $table->string('type');
-            $table->string('vendor_id')->nullable();
-            $table->string('vehicle_id')->nullable();
+            $table->string('vendor_id')->nullable()->index();
+            $table->string('vehicle_id')->nullable()->index();
             $table->decimal('amount', 10, 2);
             $table->string('payment_method');
             $table->date('payment_date');

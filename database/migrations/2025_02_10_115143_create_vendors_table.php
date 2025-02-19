@@ -16,17 +16,17 @@ return new class extends Migration
         Schema::create('vendors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email');
-            $table->string('mobile');
-            $table->string('gender');
-            $table->string('gst_code');
-            $table->string('gst_number');
-            $table->date('dob');
-            $table->string('address');
-            $table->string('city');
-            $table->string('state');
-            $table->string('country');
-            $table->string('zip_code');
+            $table->string('email')->nullable();
+            $table->string('mobile')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('gst_code')->nullable();
+            $table->string('gst_number')->nullable();
+            $table->date('dob')->nullable();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
+            $table->string('zip_code')->nullable();
             $table->string('image')->nullable();
             $table->boolean('status')->default(false);
             $table->softDeletes();

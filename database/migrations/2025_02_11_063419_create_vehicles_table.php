@@ -14,13 +14,13 @@ return new class extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('vehicle_name');
-            $table->string('vehicle_number');
-            $table->string('owner_name');
-            $table->string('owner_phone');
-            $table->string('owner_address');
-            $table->string('driver_name');
-            $table->string('driver_phone');
+            $table->string('vehicle_name')->index();
+            $table->string('vehicle_number')->nullable();
+            $table->string('owner_name')->nullable();
+            $table->string('owner_phone')->nullable();
+            $table->string('owner_address')->nullable();
+            $table->string('driver_name')->nullable();
+            $table->string('driver_phone')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Vendor;
-use App\Models\GST;
+use App\Models\State;
+use App\Services\FileUploadService;
 class VendorController extends Controller
 {
+    protected $fileUploadService;
+
+    public function __construct(FileUploadService $fileUploadService)
+    {
+        $this->fileUploadService = $fileUploadService;
+    }
     public function index(Request $request)
     {
         $query = Vendor::query();
@@ -29,43 +36,36 @@ class VendorController extends Controller
 
     public function create()
     {
-        $gsts = GST::all();
-        return view('admin.vendor.create', compact('gsts'));
+        $states = State::all();
+        return view('admin.vendor.create', compact('states'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:vendors',
             'mobile' => 'required',
-            'gst_number' => 'required',
-            'address' => 'required',
-            'gst_code' => 'required',
+            'gst_number' => 'nullable',
+            'address' => 'nullable',
+            'gst_code' => 'nullable',
+            'gender' => 'nullable',
+            'dob' => 'nullable',
+            'city' => 'nullable',
+            'state' => 'nullable',
+            'country' => 'nullable',
+            'zip_code' => 'nullable',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'gst_number' => $request->gst_number,
-            'address' => $request->address,
-            'gender' => $request->gender,
-            'dob' => $request->dob,
-            'city' => $request->city,
-            'state' => $request->state,
-            'country' => $request->country,
-            'zip_code' => $request->zip_code,
-            'status' => $request->status ? 1 : 0,
-            'gst_code' => $request->gst_code,
-        ];
+        $data = $validated;
+        $data['status'] = $request->status ? 1 : 0;
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/vendor'), $imageName);
-            $data['image'] = $imageName;
+            $data['image'] = $this->fileUploadService->upload(
+                $request->file('image'),
+                'images/vendor'
+            );
         }
 
         Vendor::create($data);
@@ -81,51 +81,40 @@ class VendorController extends Controller
 
     public function edit($id)
     {
-        $gsts = GST::all();
+        $states = State::all();
         $vendor = Vendor::findOrFail($id);
-        return view('admin.vendor.edit', compact('vendor', 'gsts'));
+        return view('admin.vendor.edit', compact('vendor', 'states'));
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:vendors,email,'.$id,
             'mobile' => 'required',
-            'gst_number' => 'required',
-            'gst_code' => 'required',
-            'address' => 'required',
+            'gst_number' => 'nullable',
+            'gst_code' => 'nullable',
+            'address' => 'nullable',
+            'gender' => 'nullable',
+            'dob' => 'nullable|date',
+            'city' => 'nullable',
+            'state' => 'nullable',
+            'country' => 'nullable',
+            'zip_code' => 'nullable',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $vendor = Vendor::findOrFail($id);
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'gst_number' => $request->gst_number,
-            'address' => $request->address,
-            'status' => $request->status ? 1 : 0,
-            'gender' => $request->gender,
-            'dob' => $request->dob,
-            'city' => $request->city,
-            'state' => $request->state,
-            'country' => $request->country,
-            'zip_code' => $request->zip_code,
-            'gst_code' => $request->gst_code,
-        ];
+        $data = $validated;
+        $data['status'] = $request->status ? 1 : 0;
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($vendor->image && file_exists(public_path('images/vendor/' . $vendor->image))) {
-                unlink(public_path('images/vendor/' . $vendor->image));
-            }
-
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/vendor'), $imageName);
-            $data['image'] = $imageName;
+            $data['image'] = $this->fileUploadService->upload(
+                $request->file('image'),
+                'images/vendor',
+                $vendor->image
+            );
         }
 
         $vendor->update($data);
@@ -136,20 +125,10 @@ class VendorController extends Controller
     public function destroy($id)
     {
         $vendor = Vendor::findOrFail($id);
-
-        // Delete vendor image if exists
-        if ($vendor->image && file_exists(public_path('images/vendor/' . $vendor->image))) {
-            unlink(public_path('images/vendor/' . $vendor->image));
-
-            // Delete empty vendor image folder if exists
-            $folderPath = public_path('images/vendor');
-            if (is_dir($folderPath) && count(scandir($folderPath)) <= 2) { // . and .. directories
-                rmdir($folderPath);
-            }
+        if ($vendor->image) {
+            $this->fileUploadService->delete('images/vendor/' . $vendor->image);
         }
-
         $vendor->delete();
-
         return redirect()->route('vendors.index')->with('error', 'Vendor deleted successfully');
     }
 
@@ -168,9 +147,4 @@ class VendorController extends Controller
 
         return response()->json($results);
     }
-
-
-
-
-
 }

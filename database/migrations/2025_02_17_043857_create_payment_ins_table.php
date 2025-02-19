@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('payment_ins', function (Blueprint $table) {
             $table->id();
-            $table->string('customer_id');
+            $table->string('customer_id')->index();
             $table->string('reference_no');
             $table->decimal('amount', 10, 2);
             $table->string('payment_method');

@@ -38,26 +38,16 @@ class VehicleController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'vehicle_name' => 'required|string|max:255|unique:vehicles,vehicle_name',
             'owner_name' => 'required|string|max:255',
             'vehicle_no' => 'nullable',
-            'owner_phone' => 'required|string|max:255',
-            'owner_address' => 'required|string|max:255',
-            'driver_name' => 'required|string|max:255',
-            'driver_phone' => 'required|string|max:255',
+            'owner_phone' => 'nullable|string|max:255',
+            'owner_address' => 'nullable|string|max:255',
+            'driver_name' => 'nullable|string|max:255',
+            'driver_phone' => 'nullable|string|max:255',
         ]);
-
-        Vehicle::create([
-            'vehicle_name' => $request->vehicle_name,
-            'owner_name' => $request->owner_name,
-            'vehicle_number' => $request->vehicle_no,
-            'owner_phone' => $request->owner_phone,
-            'owner_address' => $request->owner_address,
-            'driver_name' => $request->driver_name,
-            'driver_phone' => $request->driver_phone,
-        ]);
-
+        Vehicle::create($validated);
         return redirect()->route('vehicles.index')->with('success', 'Vehicle created successfully');
     }
 
@@ -68,7 +58,7 @@ class VehicleController extends Controller
 
     public function update(Request $request, Vehicle $vehicle)
     {
-        $request->validate([
+        $validated = $request->validate([
             'vehicle_name' => 'required|string|max:255|unique:vehicles,vehicle_name',
             'vehicle_number' => 'nullable',
             'owner_name' => 'required|string|max:255',
@@ -78,15 +68,7 @@ class VehicleController extends Controller
             'driver_phone' => 'required|string|max:255'
         ]);
 
-        $vehicle->update([
-            'vehicle_name' => $request->vehicle_name,
-            'vehicle_number' => $request->vehicle_number,
-            'owner_name' => $request->owner_name,
-            'owner_phone' => $request->owner_phone,
-            'owner_address' => $request->owner_address,
-            'driver_name' => $request->driver_name,
-            'driver_phone' => $request->driver_phone
-        ]);
+        $vehicle->update($validated);
 
         return redirect()->route('vehicles.index')->with('success', 'Vehicle updated successfully');
     }
