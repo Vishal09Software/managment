@@ -6,29 +6,25 @@ use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\PaymentIn;
 use App\Models\Sale;
+use App\Services\TransactionService;
 
 
 class TransactionsInController extends Controller
 {
+    protected $transactionService;
+
+    public function __construct(TransactionService $transactionService)
+    {
+        $this->transactionService = $transactionService;
+    }
+
     public function index()
     {
         $customers = Customer::where('status', 1)
             ->orderBy('name')
             ->get();
 
-        $payments = PaymentIn::with(['customer'])
-            ->when(request('customer_id'), function($query) {
-                return $query->where('customer_id', request('customer_id'));
-            })
-            ->when(request('payment_method'), function($query) {
-                return $query->where('payment_method', request('payment_method'));
-            })
-            ->when(request('date_from'), function($query) {
-                return $query->whereDate('payment_date', '>=', request('date_from'));
-            })
-            ->when(request('date_to'), function($query) {
-                return $query->whereDate('payment_date', '<=', request('date_to'));
-            })
+        $payments = $this->transactionService->filterTransactions(PaymentIn::with('customer'))
             ->orderBy('created_at', 'desc')
             ->paginate(10)
             ->withQueryString();
@@ -105,22 +101,22 @@ class TransactionsInController extends Controller
 
     public function dataExport()
     {
-        $payments = PaymentIn::with(['customer'])
-            ->when(request('customer_id'), fn($q) => $q->where('customer_id', request('customer_id')))
-            ->when(request('date_from'), fn($q) => $q->whereDate('payment_date', '>=', request('date_from')))
-            ->when(request('date_to'), fn($q) => $q->whereDate('payment_date', '<=', request('date_to')))
-            ->when(request('payment_method'), fn($q) => $q->where('payment_method', request('payment_method')))
+        $payments = $this->transactionService->filterTransactions(PaymentIn::with(['customer']))
             ->latest()
             ->get()
             ->map(fn($p) => [
                 'Date' => $p->payment_date,
                 'Reference No' => $p->reference_no,
-                'Customer' => $p->customer->name ?? '',
-                'Amount' => $p->amount,
-                'Payment Method' => $p->payment_method,
+                'Customer' => $p->customer?->name ?? 'N/A',
+                'Amount' => number_format($p->amount, 2),
+                'Payment Method' => ucwords(str_replace('_', ' ', $p->payment_method))
             ]);
 
-        $filename = 'payments_' . date('Y-m-d') . '.xlsx';
+        if ($payments->isEmpty()) {
+            return redirect()->back()->with('error', 'No data available for export');
+        }
+
+        $filename = 'payments_in_' . date('Y-m-d_H-i-s') . '.xlsx';
 
         return response()->streamDownload(function() use ($payments) {
             $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -136,12 +132,22 @@ class TransactionsInController extends Controller
             $sheet->getStyle('A1')->getFont()->setBold(true);
             $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
+            // Set headers style
+            $headerStyle = [
+                'font' => ['bold' => true],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => 'E4E4E4']
+                ]
+            ];
+
             // Add headers in row 2
-            $headers = array_keys($payments[0]);
+            $headers = array_keys($payments->first());
             $col = 'A';
             foreach ($headers as $header) {
                 $sheet->setCellValue($col . '2', $header);
-                $sheet->getStyle($col . '2')->getFont()->setBold(true);
+                $sheet->getStyle($col . '2')->applyFromArray($headerStyle);
+                $sheet->getColumnDimension($col)->setAutoSize(true);
                 $col++;
             }
 
@@ -154,11 +160,6 @@ class TransactionsInController extends Controller
                 }
                 $row++;
             }
-
-            // Add autofilter
-            $lastCol = 'E';
-            $lastRow = $row - 1;
-            $sheet->setAutoFilter("A2:{$lastCol}2");
 
             $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($excel);
             $writer->save('php://output');

@@ -7,34 +7,20 @@ use App\Models\PaymentOut;
 use App\Models\Vendor;
 use App\Models\Vehicle;
 use App\Models\Sale;
+use App\Services\TransactionService;
 
 class TransactionsOutController extends Controller
 {
+    protected $transactionService;
+
+    public function __construct(TransactionService $transactionService)
+    {
+        $this->transactionService = $transactionService;
+    }
+
     public function index()
     {
-        $payments = PaymentOut::with(['vendor', 'vehicle'])
-            ->when(request('type'), function($query) {
-                $query->where('type', request('type'));
-
-                if (request('type') === 'vendor' && request('vendor_id')) {
-                    $query->where('vendor_id', request('vendor_id'));
-                }
-
-                if (request('type') === 'vehicle' && request('vehicle_id')) {
-                    $query->where('vehicle_id', request('vehicle_id'));
-                }
-
-                return $query;
-            })
-            ->when(request('date_from'), function($query) {
-                return $query->whereDate('payment_date', '>=', request('date_from'));
-            })
-            ->when(request('date_to'), function($query) {
-                return $query->whereDate('payment_date', '<=', request('date_to'));
-            })
-            ->when(request('payment_method'), function($query) {
-                return $query->where('payment_method', request('payment_method'));
-            })
+        $payments = $this->transactionService->filterTransactionsOut(PaymentOut::with(['vendor', 'vehicle']))
             ->orderBy('created_at', 'desc')
             ->paginate(10)
             ->withQueryString();
@@ -44,7 +30,6 @@ class TransactionsOutController extends Controller
 
         return view('admin.paymentOut.index', compact('payments', 'vendors', 'vehicles'));
     }
-
     public function create()
     {
         $vendors = Vendor::where('status', 1)->get();
@@ -133,13 +118,7 @@ class TransactionsOutController extends Controller
 
     public function dataExport()
     {
-        $payments = PaymentOut::with(['vendor', 'vehicle'])
-            ->when(request('type'), fn($q) => $q->where('type', request('type')))
-            ->when(request('vendor_id'), fn($q) => $q->where('vendor_id', request('vendor_id')))
-            ->when(request('vehicle_id'), fn($q) => $q->where('vehicle_id', request('vehicle_id')))
-            ->when(request('date_from'), fn($q) => $q->whereDate('payment_date', '>=', request('date_from')))
-            ->when(request('date_to'), fn($q) => $q->whereDate('payment_date', '<=', request('date_to')))
-            ->when(request('payment_method'), fn($q) => $q->where('payment_method', request('payment_method')))
+        $payments = $this->transactionService->filterTransactionsOut(PaymentOut::with(['vendor', 'vehicle']))
             ->latest()
             ->get()
             ->map(fn($p) => [

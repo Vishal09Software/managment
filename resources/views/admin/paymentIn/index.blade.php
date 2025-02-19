@@ -115,7 +115,7 @@
                                             <td>{{ $payment->payment_date }}</td>
                                             <td>
                                                 <a href="{{ route('transactions-in.receipt', $payment->id) }}"
-                                                    class="btn btn-sm btn-outline-primary">
+                                                    class="btn btn-sm btn-outline-primary" target="_blank">
                                                     <i class="bi bi-printer"></i>
                                                 </a>
 
